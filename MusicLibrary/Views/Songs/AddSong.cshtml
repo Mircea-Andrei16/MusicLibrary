@@ -1,0 +1,39 @@
+﻿@model MusicLibrary.Models.Song
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div
+  class="bg-image p-5 text-center shadow-1-strong rounded mb-5 text-black"
+  style="background-image: url('/images/backgroundGenre.png');"
+>
+<h1>Create a new song for our website</h1>
+<hr />
+<div class="form-group row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GenreId" class="control-label"></label>
+                <select asp-for="GenreId" class ="form-control" asp-items="ViewBag.GenreId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+</>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
