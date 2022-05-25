@@ -126,11 +126,6 @@ namespace MusicLibrary.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var song = _songService.GetAllSongs().FirstOrDefault(song => song.SongId == id);
             if (song == null)
             {

@@ -17,6 +17,6 @@ namespace MusicLibrary.Services.Interfaces
 
         void SaveChanges();
 
-
+        public void removeAll(PlaylistSong playlistSong);
     }
 }

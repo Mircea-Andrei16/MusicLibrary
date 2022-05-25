@@ -12,12 +12,10 @@ namespace MusicLibrary.Controllers
 {
     public class ReviewsController : Controller
     {
-        private readonly SongContext _context;
         private readonly IReviewService _reviewService;
         private readonly ISongService _songService;
-        public ReviewsController(SongContext context, IReviewService _reviewService, ISongService _songService)
+        public ReviewsController(IReviewService _reviewService, ISongService _songService)
         {
-            _context = context;
             this._reviewService = _reviewService;
             this._songService = _songService;
         }
@@ -34,14 +32,7 @@ namespace MusicLibrary.Controllers
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null || _context.Review == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Review
-                .Include(r => r.Song)
-                .FirstOrDefaultAsync(m => m.ReviewId == id);
+            var review = _reviewService.GetAllReviews().Include(r => r.Song).FirstOrDefault(review => review.ReviewId == id);
             if (review == null)
             {
                 return NotFound();
@@ -67,28 +58,23 @@ namespace MusicLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
+                _reviewService.Create(review);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SongId"] = new SelectList(_context.Song, "SongId", "SongId", review.SongId);
+            ViewData["SongId"] = new SelectList(_reviewService.GetSongs(), "SongId", "SongId", review.SongId);
             return View(review);
         }
 
         // GET: Reviews/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null || _context.Review == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Review.FindAsync(id);
+            var review = _reviewService.GetAllReviews().FirstOrDefault(review => review.ReviewId == id);
             if (review == null)
             {
                 return NotFound();
             }
-            ViewData["SongId"] = new SelectList(_context.Song, "SongId", "SongId", review.SongId);
+
+            ViewData["SongId"] = new SelectList(_reviewService.GetSongs(), "SongId", "SongId", review.SongId);
             return View(review);
         }
 
@@ -108,8 +94,7 @@ namespace MusicLibrary.Controllers
             {
                 try
                 {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
+                    _reviewService.Update(review);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,21 +109,17 @@ namespace MusicLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SongId"] = new SelectList(_context.Song, "SongId", "SongId", review.SongId);
+            ViewData["SongId"] = new SelectList(_reviewService.GetSongs(), "SongId", "SongId", review.SongId);
             return View(review);
         }
 
         // GET: Reviews/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null || _context.Review == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Review
+            var review = await _reviewService.GetAllReviews()
                 .Include(r => r.Song)
                 .FirstOrDefaultAsync(m => m.ReviewId == id);
+           
             if (review == null)
             {
                 return NotFound();
@@ -152,23 +133,19 @@ namespace MusicLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Review == null)
-            {
-                return Problem("Entity set 'SongContext.Review'  is null.");
-            }
-            var review = await _context.Review.FindAsync(id);
+            var review = await _reviewService.GetAllReviews().FirstOrDefaultAsync(review => review.ReviewId == id);
+            
             if (review != null)
             {
-                _context.Review.Remove(review);
+                _reviewService.Delete(review);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ReviewExists(Guid id)
         {
-            return (_context.Review?.Any(e => e.ReviewId == id)).GetValueOrDefault();
+            return (_reviewService.GetAllReviews().Any(e => e.ReviewId == id));
         }
     }
 }

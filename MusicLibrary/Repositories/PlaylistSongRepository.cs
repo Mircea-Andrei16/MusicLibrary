@@ -8,5 +8,10 @@ namespace MusicLibrary.Repositories.Interfaces
         {
 
         }
+
+        public void removeAll(PlaylistSong playlistSong)
+        {
+            songContext.PlaylistSong.RemoveRange(playlistSong);
+        }
     }
 }

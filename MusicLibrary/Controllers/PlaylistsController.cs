@@ -176,12 +176,20 @@ namespace MusicLibrary.Controllers
         {
             
             var playlist =  playlistService.GetAllPlaylist().FirstOrDefault(m => m.PlaylistId == id);
-            
+            var songsPlaylist = playlistSongService.GetAllPlaylistSongs().FirstOrDefault(m => m.PlaylistId == id);
+
+
             if (playlist != null)
             {
+               
                 playlistService.Delete(playlist);
             }
-            
+
+            if(songsPlaylist != null)
+            {
+                playlistSongService.removeAll(songsPlaylist);
+            }
+
             playlistService.SaveAsync();
             return RedirectToAction(nameof(Index));
         }

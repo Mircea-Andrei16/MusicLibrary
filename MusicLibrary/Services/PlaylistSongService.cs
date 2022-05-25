@@ -46,5 +46,11 @@ namespace MusicLibrary.Services
             _repository.PlaylistSongRepository.Update(playlistSong);
             _repository.Save();
         }
+
+        public void removeAll(PlaylistSong playlistSong)
+        {
+            _repository.PlaylistSongRepository.removeAll(playlistSong);
+        }
+        
     }
 }

@@ -6,8 +6,49 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+        @if (User.IsInRole("Admin"))
+        {
+             <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">
+                    Add Genres
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Songs" asp-action="Index">
+                   Music list
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Reviews" asp-action="Index">
+                   Reviews List
+                </a>
+            </li>
+        }
+        else
+        {
+             <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">
+                    See Genres
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Songs" asp-action="Index">
+                   Music list
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Reviews" asp-action="Index">
+                   Reviews List
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Playlists" asp-action="Index">
+                   Your Playlists
+                </a>
+            </li>
+        }
     <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+       <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage profile</a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
