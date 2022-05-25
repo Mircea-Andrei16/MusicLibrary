@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MusicLibrary.Models.Playlist>
+
+@{
+    ViewData["Title"] = "Add-Playlist";
+}
+
+<h1>Add music in your playlist</h1>
+<table class="table table-striped table-hover;text-primary">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PlaylistName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlaylistName)
+            </td>
+            <td>
+                <a class="btn btn-outline-primary" asp-controller="Songs" asp-action="AddPlaylist" asp-route-id="@item.PlaylistId">Add in this playlist</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

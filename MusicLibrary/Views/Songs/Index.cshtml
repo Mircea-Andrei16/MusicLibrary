@@ -45,7 +45,8 @@
                     }
                 </td>
             <td>
-             <a class="btn btn-primary" asp-action="Create" asp-controller="Reviews" asp-route-id="@item.SongId">Create Reviews</a>
+             <a class="btn btn-primary" asp-action="Create" asp-controller="Reviews" asp-route-id="@item.SongId">Create Reviews</a> |
+             <a class="btn btn-primary" asp-action="AddSongPlaylist" asp-controller="Songs" asp-route-id="@item.SongId">Add song in playlist</a>
             </td>
         </tr>
 }

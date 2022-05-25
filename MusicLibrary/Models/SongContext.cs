@@ -14,5 +14,6 @@ namespace MusicLibrary.Models
         public DbSet<Genre> Genre { get; set; }
         public DbSet<Playlist> Playlist { get; set; }
         public DbSet<Review> Review { get; set; }
+        public DbSet<PlaylistSong> PlaylistSong { get; set; }
     }
 }

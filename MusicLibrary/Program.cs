@@ -32,6 +32,9 @@ builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 //add service for Review
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+//add service for PlaylistSong
+builder.Services.AddScoped<IPlaylistSongRepository, PlaylistSongRepository>();
+builder.Services.AddScoped<IPlaylistSongService, PlaylistSongService>();
 
 
 builder.Services.AddDbContext<MusicLibrary.Models.SongContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SongDb")));

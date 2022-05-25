@@ -9,5 +9,7 @@
         public int? NumberOfSongs { get; set; }
 
         public int? TotalTime { get; set; }
+
+        public string? UserMail { get; set; }
     }
 }

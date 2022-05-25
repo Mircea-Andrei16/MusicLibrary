@@ -10,6 +10,8 @@
 
         IPlaylistRepository PlaylistRepository { get; }
 
+        IPlaylistSongRepository PlaylistSongRepository { get; }
+
         void Save();
     }
 }

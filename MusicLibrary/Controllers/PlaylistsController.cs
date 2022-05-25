@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,20 +15,41 @@ namespace MusicLibrary.Controllers
     public class PlaylistsController : Controller
     {
         private readonly IPlaylistService playlistService;
+        private readonly IPlaylistSongService playlistSongService;
 
-        public PlaylistsController(IPlaylistService playlistService)
+        public PlaylistsController(IPlaylistService playlistService, IPlaylistSongService playlistSongService)
         {
             this.playlistService = playlistService;
+            this.playlistSongService = playlistSongService;
         }
 
         // GET: Playlists
+        [Authorize(Roles ="User")]
         public async Task<IActionResult> Index()
         {
-           var playlists = playlistService.GetAllPlaylist();
+            var userId = User.FindFirstValue(ClaimTypes.Email);
+
+            var playlists = playlistService.FindByCondition(playlist => playlist.UserMail == userId);
 
            return View(playlists);
         }
 
+        public IActionResult DisplaySongForPlaylist(Guid id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Email);
+            
+            var allSongForPlaylist = playlistSongService.FindByCondition(playlistSong => playlistSong.UserMail == userId && playlistSong.PlaylistId == id);
+
+            if (allSongForPlaylist.Any())
+            {
+
+                return View(allSongForPlaylist);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "User")]
         // GET: Playlists/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
@@ -47,6 +70,7 @@ namespace MusicLibrary.Controllers
         }
 
         // GET: Playlists/Create
+        [Authorize(Roles = "User")]
         public IActionResult Create()
         {
             return View();
@@ -57,11 +81,15 @@ namespace MusicLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public IActionResult Create([Bind("PlaylistId,PlaylistName,NumberOfSongs,TotalTime")] Playlist playlist)
         {
             if (ModelState.IsValid)
             {
-               playlistService.Create(playlist);
+                var userId = User.FindFirstValue(ClaimTypes.Email);
+                playlist.UserMail = userId;
+
+                playlistService.Create(playlist);
                 playlistService.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -69,6 +97,7 @@ namespace MusicLibrary.Controllers
         }
 
         // GET: Playlists/Edit/5
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
@@ -89,6 +118,7 @@ namespace MusicLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(Guid id, [Bind("PlaylistId,PlaylistName,NumberOfSongs,TotalTime,UserId")] Playlist playlist)
         {
             if (id != playlist.PlaylistId)
@@ -120,6 +150,7 @@ namespace MusicLibrary.Controllers
         }
 
         // GET: Playlists/Delete/5
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
@@ -139,6 +170,7 @@ namespace MusicLibrary.Controllers
 
         // POST: Playlists/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {

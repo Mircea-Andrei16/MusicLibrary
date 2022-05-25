@@ -1,4 +1,4 @@
-﻿@model MusicLibrary.Models.Song
+﻿@model IEnumerable<MusicLibrary.Models.Song>
 
 @{
     ViewData["Title"] = "Details";
@@ -9,34 +9,29 @@
 <div>
     <h4>Song</h4>
     <hr />
+@foreach(var item in Model){
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
+            @Html.DisplayFor(modelItem => item.Title)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.MusicContent)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MusicContent)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre.GenreId)
+                        @if(item.MusicContent != null)
+                    {
+                        <audio controls>
+                            <source src ="~/@Url.Content(item.MusicContent)" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                    }
         </dd>
     </dl>
+    }
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.SongId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <button class="button button2" onclick="history.back()">Go Back</button>
 </div>

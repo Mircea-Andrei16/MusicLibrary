@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +17,16 @@ namespace MusicLibrary.Controllers
     public class SongsController : Controller
     {
         private readonly ISongService _songService;
+        private readonly IPlaylistService _playlistService;
+        private readonly IPlaylistSongService _playlistSongService;
+        private readonly SongContext _context;
 
-        public SongsController(ISongService _songService)
+        public SongsController(ISongService _songService, IPlaylistService playlistService, IPlaylistSongService _playlistSongService, SongContext _context)
         {
             this._songService = _songService;
+            _playlistService = playlistService;
+            this._playlistSongService = _playlistSongService;
+            this._context = _context;
         }
 
         //List all the song in the database
@@ -36,22 +45,54 @@ namespace MusicLibrary.Controllers
             }
         }
 
-        // GET: Songs/Details/5
-        [Authorize(Roles ="Admin")]
-        public IActionResult Details(Guid id)
+        [Authorize(Roles ="User")]
+        public IActionResult AddSongPlaylist(Guid id)
         {
-            if (id == null)
+            var userId = User.FindFirstValue(ClaimTypes.Email);
+
+            var allPlaylist = _playlistService.FindByCondition(playlist => playlist.UserMail == userId);
+
+            if (allPlaylist.Any())
             {
-                return NotFound();
+                PlaylistSong playlistSong = new PlaylistSong{ UserMail = userId, SongId = id};
+                _playlistSongService.Create(playlistSong);
+                return View(allPlaylist);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        [Authorize(Roles = "User")]
+        public IActionResult AddPlaylist(Guid id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.Email);
+
+            var playlist = _playlistSongService.FindByCondition(playlist => playlist.UserMail == userId);
+            PlaylistSong? found = null;
+            foreach (PlaylistSong playlistSong in playlist)
+            {
+                if(playlistSong.PlaylistId == Guid.Empty)
+                {
+                    found = playlistSong;
+                    break;
+                }
             }
 
-            var song = _songService.GetAllSongs()
-                .Include(s => s.Genre)
-                .FirstOrDefault(m => m.SongId == id);
-            if (song == null)
+            if (found != null)
             {
-                return NotFound();
+                found.PlaylistId = id;
+                _playlistSongService.Update(found);
             }
+            return RedirectToAction("Index");
+        }
+
+        // GET: Songs/Details/5
+        [Authorize(Roles = "User")]
+        public IActionResult Details(Guid id)
+        {
+            var song = _songService.FindByCondition(song => song.SongId == id);
 
             return View(song);
         }

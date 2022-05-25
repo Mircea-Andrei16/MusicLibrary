@@ -12,8 +12,8 @@ using MusicLibrary.Models;
 namespace MusicLibrary.Migrations
 {
     [DbContext(typeof(SongContext))]
-    [Migration("20220523154247_identity")]
-    partial class identity
+    [Migration("20220524181157_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,6 +257,9 @@ namespace MusicLibrary.Migrations
 
                     b.Property<int?>("TotalTime")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserMail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PlaylistId");
 

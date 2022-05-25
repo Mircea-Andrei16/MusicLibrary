@@ -1,4 +1,5 @@
 ﻿using MusicLibrary.Models;
+using System.Linq.Expressions;
 
 namespace MusicLibrary.Services.Interfaces
 {
@@ -12,7 +13,7 @@ namespace MusicLibrary.Services.Interfaces
 
         void Update(Playlist playlist);
 
-        IQueryable<Playlist> FindByCondition();
+        IQueryable<Playlist> FindByCondition(Expression<Func<Playlist, bool>> expression);
 
         void SaveAsync();
 

@@ -39,7 +39,8 @@
             <td>
                 <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.PlaylistId">Edit</a> |
                 <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.PlaylistId">Details</a> |
-                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.PlaylistId">Delete</a>
+                <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.PlaylistId">Delete</a> |
+                <a class="btn btn-outline-primary" asp-action="DisplaySongForPlaylist" asp-route-id="@item.PlaylistId">See songs from your playlist</a>
             </td>
         </tr>
 }

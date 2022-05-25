@@ -1,6 +1,7 @@
 ﻿using MusicLibrary.Models;
 using MusicLibrary.Repositories.Interfaces;
 using MusicLibrary.Services.Interfaces;
+using System.Linq.Expressions;
 
 namespace MusicLibrary.Services
 {
@@ -23,9 +24,9 @@ namespace MusicLibrary.Services
             RepositoryWrapper.PlaylistRepository.Delete(playlist);
         }
 
-        public IQueryable<Playlist> FindByCondition()
+        public IQueryable<Playlist> FindByCondition(Expression<Func<Playlist, bool>> expression)
         {
-            throw new NotImplementedException();
+           return RepositoryWrapper.PlaylistRepository.FindByCondition(expression);
         }
 
         public IQueryable<Playlist> GetAllPlaylist()

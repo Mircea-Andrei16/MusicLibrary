@@ -12,6 +12,7 @@ namespace MusicLibrary.Repositories
         private IPlaylistRepository? _playlistRepository;
         private ISongRepository? _songRepository;
         private IReviewRepository? _reviewRepository;
+        private IPlaylistSongRepository? _playlistSongRepository;
 
 
         public IPlaylistRepository PlaylistRepository
@@ -63,6 +64,19 @@ namespace MusicLibrary.Repositories
                 }
 
                 return _genreRepository; 
+            }
+        }
+
+        public IPlaylistSongRepository PlaylistSongRepository
+        {
+            get
+            {
+                if(_playlistSongRepository == null)
+                {
+                    _playlistSongRepository = new PlaylistSongRepository(_songContext);
+                }
+
+                return _playlistSongRepository;
             }
         }
 
